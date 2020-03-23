@@ -1,0 +1,12 @@
+{
+  "name": "talk-tdd-against-the-odds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "backslide": "^2.6.0",
+    "decktape": "^2.11.0"
+  },
+  "author": "Mario Fernandez",
+  "license": "MIT"
+}

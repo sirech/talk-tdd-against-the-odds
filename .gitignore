@@ -1,0 +1,7 @@
+.gradle/
+.tmp/
+build/
+pdf/
+dist/
+node_modules/
+
