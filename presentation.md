@@ -18,19 +18,21 @@ class: impact full-width
 
 ---
 
-TW loves TDD slide
-
----
-
 class: center middle
 
-## TDD can be so simple
+## ThoughtWorks  ❤️   Test Driven Development
 
 ---
 
 class: center middle
 
 ![tdd](images/tdd.png)
+
+---
+
+class: center middle
+
+## Let's look at an example
 
 ---
 
@@ -88,17 +90,6 @@ fun `associative property`() {
 class: center middle
 
 ```kotlin
-@Test
-fun `commutative property`() {
-    expectThat((Sum(3) + Sum(2)) + Sum(5))
-        .isEqualTo(Sum(3) + (Sum(2) + Sum(5)))
-}
-```
----
-
-class: center middle
-
-```kotlin
 data class Sum(private val value: Int) {
     operator fun plus(other: Sum): Sum {
         return Sum(value + other.value)
@@ -114,67 +105,9 @@ class: center middle
 
 ---
 
-diagram with the 3 blocks
-
----
-
-class: transition
-
-# Backend
-
----
-
-picture of backend talking to an API
-
----
-
-picture of backend being mocked
-
----
-
-class: left middle
-
-## .red[❌] Maintaining mocks
-
---
-
-## .red[❌] Keeping them compatible with the implementation
-
----
-
 class: center middle
 
-## Recordings
-
----
-
-class: center middle
-
-![recordings](images/recordings.png)
-
----
-
-class: center middle
-
-```kotlin
-@RunWith(SpringRunner::class)
-@SpringBootTest
-class JsonPlaceholderTest : RecordedTest() {
-    @Autowired
-    lateinit var subject: JsonPlaceholder
-
-    @Test
-    fun todos() {
-        subject.todos()
-    }
-}
-```
-
----
-
-class: center middle
-
-### hceris.com/recording-apis-with-wiremock
+![3-layers](images/3-layers.png)
 
 ---
 
@@ -196,7 +129,15 @@ class: center middle
 
 ---
 
-picture of jest + enzyme
+class: center middle
+
+.col-8[
+![jest](images/jest.png)
+]
+
+.col-4[
+![enzyme](images/enzyme.jpg)
+]
 
 ---
 
@@ -212,16 +153,6 @@ it('renders a recipe list', () => {
   }))
 })
 ```
-
----
-
-class: left middle
-
-## .red[❌] Hard to refactor
-
---
-
-## .red[❌] What about interaction between components
 
 ---
 
@@ -338,23 +269,153 @@ Watch Usage: Press w to show more.
 
 class: transition
 
+# Backend
+
+---
+
+class: center middle
+
+![many-apis](images/many-apis.png)
+
+---
+
+class: center middle
+
+![many-apis-mock](images/many-apis-mock.png)
+
+---
+
+class: left middle
+
+## .red[❌] Maintenance
+
+--
+
+## .red[❌] Is it still working?
+
+---
+
+class: center middle
+
+## Alternative
+### Recordings
+
+---
+
+class: center middle
+
+![wiremock](images/wiremock.jpg)
+
+---
+
+class: center middle
+
+![recordings](images/recordings.png)
+
+---
+
+class: center middle
+
+## Workflow
+
+---
+
+class: center middle
+
+## Write basic API client that makes a call
+
+---
+
+class: center middle
+
+```kotlin
+@Component
+class JsonPlaceholder {
+    @Autowired
+    lateinit var template: RestTemplate
+
+    fun todos(): JsonNode {
+        val response = template.exchange(
+                "/todos",
+                HttpMethod.GET,
+                null,
+                JsonNode::class.java)
+        return response.body
+    }
+}
+```
+
+---
+
+class: center middle
+
+## Write integration test that calls the real endpoint and stores the result
+
+---
+
+class: center middle
+
+```kotlin
+@Category(IntegrationTest::class)
+@RunWith(SpringRunner::class)
+@SpringBootTest
+class JsonPlaceholderIntegrationTest : RecordingTest() {
+    public override fun recordingServerUrl(): String {
+        return "https://jsonplaceholder.typicode.com"
+    }
+
+    @Autowired
+    lateinit var subject: JsonPlaceholder
+
+    @Test
+    fun todos() {
+        subject.todos()
+    }
+}
+```
+
+---
+
+class: center middle
+
+## Use recording in unit test and refine call
+
+---
+
+class: center middle
+
+```kotlin
+@RunWith(SpringRunner::class)
+@SpringBootTest
+class JsonPlaceholderTest : RecordedTest() {
+    @Autowired
+    lateinit var subject: JsonPlaceholder
+
+    @Test
+    fun todos() {
+        expectThat(subject.todos())
+            .isNotEmpty()
+    }
+}
+```
+
+---
+
+class: center middle
+
+### hceris.com/recording-apis-with-wiremock
+
+---
+
+class: transition
+
 # Infrastructure
 
 ---
 
-picture of infra complexity
+class: center middle
 
----
-
-picture result of a pipeline
-
----
-
-picture docker
-
----
-
-picture k8s target environment
+![docker](images/docker.png)
 
 ---
 
@@ -503,13 +564,7 @@ Finished in 12.87 seconds (files took 1.69 seconds to load)
 
 class: center middle
 
-## Why?
-
----
-
-class: center middle
-
-## Catch easy mistakes
+### github.com/sirech/talks/blob/master/2019-01-tw-tdd_containers.pdf
 
 ---
 
@@ -521,6 +576,19 @@ class: transition
 
 class: center middle
 
-## A test driven approach can be used in most situations
+## TDD can be used in situations you didn't think about
 
+---
+
+class: center middle
+
+## Get creative
+
+---
+
+class: center middle
+
+## Don't get stuck at the definition of a *Unit Test*
+
+---
 
