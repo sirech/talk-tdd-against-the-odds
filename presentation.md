@@ -592,3 +592,10 @@ class: center middle
 
 ---
 
+class: transition
+
+## Mario Fernandez
+ 
+ **Thought**Works
+
+---
