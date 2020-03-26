@@ -255,6 +255,13 @@ it('renders a recipe list', async () => {
 })
 ```
 
+--
+
+```typescript
+jest.mock('recipe-list/recipeList.service')
+jest.mock('recipe-details/recipeDetails.service')
+```
+
 ---
 
 class: center middle
@@ -586,7 +593,7 @@ class: middle
 
 ```ruby
 describe file('/etc/alpine-release') do
-  its(:content) { is_expected.to match(/3.8.2/) }
+  its(:content) { is_expected.to match(/3.8/) }
 end
 ```
 
@@ -598,8 +605,16 @@ class: middle
 
 ```ruby
 describe command('java -version') do
-  its(:stderr) { is_expected.to match(/1.8.0_181/) }
+  its(:stderr) { is_expected.to match(/1.8/) }
 end
+```
+
+---
+
+class: center middle
+
+```Dockerfile
+FROM openjdk:8-jre-alpine3.8
 ```
 
 ---
@@ -613,6 +628,30 @@ describe file('gs-rest-service.jar') do
   it { is_expected.to be_file }
 end
 ```
+
+---
+
+class: center middle
+
+```Dockerfile
+FROM openjdk:8-jre-alpine3.8
+
+WORKDIR /app
+ENV VERSION="0.1.0"
+
+*COPY build/libs/gs-rest-service-${VERSION}.jar gs-rest-service.jar
+```
+---
+
+class: center middle
+
+## This is not just about static checks
+
+---
+
+class: center middle
+
+## Runtime checks are also possible
 
 ---
 
@@ -641,6 +680,22 @@ end
 
 ---
 
+class: center middle
+
+```Dockerfile
+FROM openjdk:8-jre-alpine3.8
+
+WORKDIR /app
+*EXPOSE 8080
+ENV VERSION="0.1.0"
+
+COPY build/libs/gs-rest-service-${VERSION}.jar gs-rest-service.jar
+
+*CMD ["java", "-jar", "gs-rest-service.jar"]
+```
+
+---
+
 class: middle
 
 ### Not running under root
@@ -664,9 +719,9 @@ ENV VERSION="0.1.0"
 
 COPY build/libs/gs-rest-service-${VERSION}.jar gs-rest-service.jar
 
-RUN adduser -D runner
+*RUN adduser -D runner
+*USER runner
 
-USER runner
 CMD ["java", "-jar", "gs-rest-service.jar"]
 ```
 
