@@ -16,17 +16,31 @@ class: impact full-width
 
 ???
 
+- I want to talk about TDD for the next 30 minutes or so. I want to share 3 stories about how I've seen TDD used in our projects
+
 ---
 
 class: center middle
 
 ## ThoughtWorks  ❤️   Test Driven Development
 
+???
+
+- We love TDD@TW. How can we test this? is one of the most common questions you will hear in our teams
+
 ---
 
 class: center middle
 
 ![tdd](images/tdd.png)
+
+???
+
+Write a red test
+Make it green
+Refactor the code
+
+You probably have heard this many times already
 
 ---
 
@@ -43,6 +57,10 @@ data class Sum(private val value: Int) {
     operator fun plus(other: Sum): Sum
 }
 ```
+
+???
+
+- let's imagine we can to re-implement summation
 
 --
 
@@ -101,11 +119,29 @@ data class Sum(private val value: Int) {
 
 class: center middle
 
-## Reality is a lot messier
+## Reality is messy
+
+???
+
+- Sounds great
+- Often in practice, our code is not a neat class with well defined input/output parameters
 
 ---
 
 class: center middle
+
+![3-layers](images/3-layers.png)
+
+???
+
+- I'm going to show you 3 examples where we used a TDD approach for something that's a bit less standard
+- three very different areas
+
+---
+
+class: center middle
+
+### One case study for each
 
 ![3-layers](images/3-layers.png)
 
@@ -114,6 +150,13 @@ class: center middle
 class: transition
 
 # Frontend
+
+---
+
+class: center middle
+
+## Frontend = SPA
+### These days
 
 ---
 
@@ -143,14 +186,16 @@ class: center middle
 
 class: center middle
 
+![cookery-parts](images/cookery-parts.png)
+
+---
+
+class: center middle
+
 
 ```typescript
 it('renders a recipe list', () => {
-  const wrapper = shallow(<RecipeList {...props} />)
-  
-  expect(wrapper.find('Recipe').props().toEqual({
-    title: 'Pasta Carbonara'
-  }))
+* const wrapper = shallow(<RecipeList {...props} />)
 })
 ```
 
@@ -158,7 +203,33 @@ it('renders a recipe list', () => {
 
 class: center middle
 
+
+```typescript
+it('renders a recipe list', () => {
+  const wrapper = shallow(<RecipeList {...props} />)
+  
+* expect(wrapper.find('Recipe').props().toEqual({
+*   title: 'Pasta Carbonara'
+* }))
+})
+```
+---
+
+class: center middle
+
+## This is not great
+
+---
+
+class: center middle
+
 ### kentcdodds.com/blog/why-i-never-use-shallow-rendering
+
+???
+
+- TLDR: 
+ - hard to refactor
+ - app might be broken and tests green
 
 ---
 
@@ -212,8 +283,26 @@ it('renders a recipe list', async () => {
   // Navigate to list of recipes
   await waitForElement(() => getByTestId('recipe-list'))
 
-* // Select one recipe
+* // Check recipe
 * await waitForElement(() => getByText('Pasta Carbonara'))
+})
+```
+
+---
+
+class: center middle
+
+```typescript
+it('renders a recipe list', async () => {
+  const { getByTestId, getByText, getAllByText } = fullRender(<App />, {
+    route: '/recipes',
+  })
+
+  // Navigate to list of recipes
+  await waitForElement(() => getByTestId('recipe-list'))
+
+  // Check recipe + Navigate to it
+  await waitForElement(() => getByText('Pasta Carbonara'))
 * userEvent.click(getAllByText('DETAILS')[0])
 * await waitForElement(() => getByText('egg'))
 })
@@ -232,7 +321,7 @@ it('renders a recipe list', async () => {
   // Navigate to list of recipes
   await waitForElement(() => getByTestId('recipe-list'))
 
-  // Select one recipe
+  // Check recipe + Navigate to it
   await waitForElement(() => getByText('Pasta Carbonara'))
   userEvent.click(getAllByText('DETAILS')[0])
   await waitForElement(() => getByText('egg'))
@@ -267,6 +356,18 @@ Watch Usage: Press w to show more.
 
 ---
 
+class: center middle
+
+## Closer to integration tests than to unit tests
+
+---
+
+class: center middle
+
+## But more meaningful results
+
+---
+
 class: transition
 
 # Backend
@@ -281,17 +382,15 @@ class: center middle
 
 class: center middle
 
+## Consumer Driven Contract Testing
+
 ![many-apis-mock](images/many-apis-mock.png)
 
 ---
 
-class: left middle
+class: center middle
 
-## .red[❌] Maintenance
-
---
-
-## .red[❌] Is it still working?
+## Only works if both parties can fulfill the contract as part of CI/CD
 
 ---
 
@@ -403,6 +502,21 @@ class JsonPlaceholderTest : RecordedTest() {
 
 class: center middle
 
+```console
+usage: ./go <goal>
+
+    goal:
+
+    test-unit                -- Run unit tests
+    test-integration         -- Run integration tests
+
+    refresh-recordings       -- Recreate recordings
+```
+
+---
+
+class: center middle
+
 ### hceris.com/recording-apis-with-wiremock
 
 ---
@@ -415,7 +529,25 @@ class: transition
 
 class: center middle
 
+## For us, infrastructure mostly means cloud infrastructure provisioned with code
+
+---
+
+class: center middle
+
+## That, however, is a very broad topic
+
+---
+
+class: center middle
+
 ![docker](images/docker.png)
+
+---
+
+class: center middle
+
+## TDD for  containers
 
 ---
 
@@ -429,7 +561,9 @@ serverspec.org
 
 ---
 
-class: center middle
+class: middle
+
+## Basic setup
 
 ```ruby
 require 'serverspec'
