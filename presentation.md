@@ -48,6 +48,10 @@ class: center middle
 
 ## Let's look at an example
 
+???
+
+- small intro before we get started with the meaty part
+
 ---
 
 class: center middle
@@ -115,6 +119,10 @@ data class Sum(private val value: Int) {
 }
 ```
 
+???
+
+- in a more realistic case you would implement this incrementally
+
 ---
 
 class: center middle
@@ -144,6 +152,10 @@ class: center middle
 ### One case study for each
 
 ![3-layers](images/3-layers.png)
+
+???
+
+- I will introduce what we did. Due to time limitations it will be more of a teaser rather than a deep dive
 
 ---
 
@@ -188,6 +200,10 @@ class: center middle
 
 ![cookery-parts](images/cookery-parts.png)
 
+???
+
+- given that this is a react application, it can be seen as a hierarchy of components
+
 ---
 
 class: center middle
@@ -198,6 +214,10 @@ it('renders a recipe list', () => {
 * const wrapper = shallow(<RecipeList {...props} />)
 })
 ```
+
+???
+
+- shallow rendering means that the underlying components are essentially mocked
 
 ---
 
@@ -243,6 +263,10 @@ class: center middle
 
 > The more your tests resemble the way your software is used, the more confidence they can give you.
 
+???
+
+- in a previous project, we had internal discussions about this. How do we test the FE?
+
 ---
 
 class: center middle
@@ -255,12 +279,20 @@ it('renders a recipe list', async () => {
 })
 ```
 
+???
+
+- you already can spot a difference, we are rendering the whole tree, not just one component
+
 --
 
 ```typescript
 jest.mock('recipe-list/recipeList.service')
 jest.mock('recipe-details/recipeDetails.service')
 ```
+
+???
+
+- the only things that we mock are calls to the backend
 
 ---
 
@@ -367,11 +399,19 @@ class: center middle
 
 ## Closer to integration tests than to unit tests
 
+???
+
+- this level of granularity was a source of discussion in our project
+
 ---
 
 class: center middle
 
 ## But more meaningful results
+
+???
+
+- takes time getting used to it
 
 ---
 
@@ -384,6 +424,10 @@ class: transition
 class: center middle
 
 ![many-apis](images/many-apis.png)
+
+???
+
+- how do you test this?
 
 ---
 
